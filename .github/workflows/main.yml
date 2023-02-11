@@ -56,7 +56,6 @@ jobs:
          brunch onclite
          cd $OUT
          mv *.zip *.img ${GITHUB_WORKSPACE}/releases
-         EOSU
       - name: Move bins to release dir
         run: |
           mv *.deb ${GITHUB_WORKSPACE}/releases
