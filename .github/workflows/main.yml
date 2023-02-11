@@ -30,7 +30,6 @@ jobs:
          git config --global user.name "Your Name"
          source ~/.profile
          cd ~/android/lineage
-         ln -s /usr/bin/python3 /usr/bin/python
          repo init -u https://github.com/LineageOS/android.git -b lineage-17.1
          repo sync -c -j`nproc`
          source build/envsetup.sh
