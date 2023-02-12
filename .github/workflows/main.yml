@@ -16,48 +16,47 @@ jobs:
     steps:
       - name: Build
         run: |
-         sudo apt update
-         sudo apt install --no-install-recommends -qy bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev libelf-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev openjdk-11-jdk repo brotli unzip
-         mkdir -p ~/bin
-         mkdir -p ~/android/lineage
-         curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-         chmod a+x ~/bin/repo
-         echo "# set PATH so it includes user's private bin if it exists
-         if [ -d "$HOME/bin" ] ; then
-             PATH="$HOME/bin:$PATH"
-         fi" >> ~/.profile
-         git config --global user.email "you@example.com"
-         git config --global user.name "Your Name"
-         source ~/.profile
-         cd ~/android/lineage
-         repo init -u https://github.com/LineageOS/android.git -b lineage-17.1
-         repo sync -c -j`nproc`
-         source build/envsetup.sh
-         breakfast onclite
-         mkdir ~/android/system_dump/
-         cd ~/android/system_dump/
-         wget https://b2.timschumi.net/file/lineage-archive/lineage-17.1-20210214-nightly-onclite-signed.zip
-         unzip lineage-*.zip system.transfer.list system.new.dat*
-         unzip lineage-*.zip vendor.transfer.list vendor.new.dat*
-         brotli --decompress --output=system.new.dat system.new.dat.br
-         brotli --decompress --output=vendor.new.dat vendor.new.dat.br
-         git clone https://github.com/xpirt/sdat2img
-         python3 sdat2img/sdat2img.py system.transfer.list system.new.dat system.img
-         mkdir system/
-         mount system.img system/
-         python3 sdat2img/sdat2img.py vendor.transfer.list vendor.new.dat vendor.img
-         rm -rf system/vendor
-         mkdir system/vendor
-         mount vendor.img system/vendor/
-         cd ~/android/lineage/device/xiaomi/onclite
-         ./extract-files.sh ~/android/system_dump/
-         croot
-         brunch onclite
-         cd $OUT
-         mv *.zip *.img ${GITHUB_WORKSPACE}/releases
+          sudo apt update
+          sudo apt install --no-install-recommends -qy bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev libelf-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev openjdk-11-jdk repo brotli unzip
+          mkdir -p ~/bin
+          mkdir -p ~/android/lineage
+          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+          chmod a+x ~/bin/repo
+          echo "# set PATH so it includes user's private bin if it exists
+          if [ -d "$HOME/bin" ] ; then
+              PATH="$HOME/bin:$PATH"
+          fi" >> ~/.profile
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          source ~/.profile
+          cd ~/android/lineage
+          repo init -u https://github.com/LineageOS/android.git -b lineage-17.1
+          repo sync -c -j`nproc`
+          source build/envsetup.sh
+          breakfast onclite
+          mkdir ~/android/system_dump/
+          cd ~/android/system_dump/
+          wget https://b2.timschumi.net/file/lineage-archive/lineage-17.1-20210214-nightly-onclite-signed.zip
+          unzip lineage-*.zip system.transfer.list system.new.dat*
+          unzip lineage-*.zip vendor.transfer.list vendor.new.dat*
+          brotli --decompress --output=system.new.dat system.new.dat.br
+          brotli --decompress --output=vendor.new.dat vendor.new.dat.br
+          git clone https://github.com/xpirt/sdat2img
+          python3 sdat2img/sdat2img.py system.transfer.list system.new.dat system.img
+          mkdir system/
+          mount system.img system/
+          python3 sdat2img/sdat2img.py vendor.transfer.list vendor.new.dat vendor.img
+          rm -rf system/vendor
+          mkdir system/vendor
+          mount vendor.img system/vendor/
+          cd ~/android/lineage/device/xiaomi/onclite
+          ./extract-files.sh ~/android/system_dump/
+          croot
+          brunch onclite
       - name: Move bins to release dir
         run: |
-          mv *.deb ${GITHUB_WORKSPACE}/releases
+          cd $OUT
+          mv lineage-17.1-*.zip recovery.img ${GITHUB_WORKSPACE}/releases
       - name: Generate release tag
         run: |
           echo "::set-output name=release_tag::17.1"
